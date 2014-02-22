@@ -6,15 +6,16 @@
 		factory(global);
 	}
 }(window || this, function (global) {
-	// Support cmd && amd
-	if (define) {
-		define(factory);
-	}	
 	// global require
 	if (typeof require === 'function') {
 		return factory(require);
 	}
-
+	
+	// Support cmd && amd
+	if (define) {
+		define(factory);
+	}
+	
 	function factory (require, exports) {
 		var 
 		$ = require('jquery'), 
