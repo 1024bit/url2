@@ -1,19 +1,19 @@
 (function (global, factory) {
+	'use strict';	
 	// Node.js, CommonJS, CommonJS Like
 	if (typeof module === 'object' && typeof module.exports === 'object') {
-		module.exports = factory(global);
+		module.exports = factory(global, true);
 	} else {
 		factory(global);
 	}
-}(window || this, function (global) {
-	// global require
+}(this, function (global, noGlobal) {
+	// Support cmd && amd
+	if (define && (define.cmd || define.amd)) {
+		return define("url", [], factory);
+	} 
+	// Global require
 	if (typeof require === 'function') {
 		return factory(require);
-	}
-	
-	// Support cmd && amd
-	if (define) {
-		define(factory);
 	}
 	
 	function factory (require, exports) {
