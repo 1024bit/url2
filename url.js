@@ -15,6 +15,8 @@
 	if (typeof require === 'function') {
 		return factory(require);
 	}
+	// Common
+	factory();
 	
 	function factory (require, exports) {
 		var 
@@ -34,7 +36,7 @@
 	         * example 1: parse_url('http://username:password@hostname/path?arg=value#anchor');
 	         * returns 1: {scheme: 'http', host: 'hostname', user: 'username', pass: 'password', path: '/path', query: 'arg=value', fragment: 'anchor'}
 	         */
-	        resolve: function(str, component) {
+	        resolve: function (uri, name) {
 	            var key = ['source', 'scheme', 'authority', 'userInfo', 'user', 'pass', 'host', 'port', 
 	                                'relative', 'path', 'directory', 'file', 'query', 'fragment'],
 	                ini = (this.php_js && this.php_js.ini) || {},
@@ -46,8 +48,8 @@
 	                    loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/\/?)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/ // Added one optional slash to post-scheme to catch file:/// (should restrict this)
 	                };
 	         
-	            var m = parser[mode].exec(str),
-	                componet = {
+	            var m = parser[mode].exec(uri),
+	                component = {
 	                    scheme: '', 
 	                    host: '', 
 	                    hostname: '', 
@@ -63,33 +65,33 @@
 	                i = 14;
 	            while (i--) {
 	                if (m[i]) {
-	                  componet[key[i]] = m[i];  
+	                  component[key[i]] = m[i];  
 	                }
 	            }
 	         
-	            if (component) {
-	                return componet[component.replace('PHP_URL_', '').toLowerCase()];
+	            if (name) {
+	                return component[name.replace('PHP_URL_', '').toLowerCase()];
 	            }
 	            if (mode !== 'php') {
-	                var name = (ini['phpjs.parse_url.queryKey'] && 
+	                var queryKey = (ini['phpjs.parse_url.queryKey'] && 
 	                        ini['phpjs.parse_url.queryKey'].local_value) || 'queryKey';
 	                parser = /(?:^|&)([^&=]*)=?([^&]*)/g;
-	                componet[name] = {};
-	                componet[key[12]].replace(parser, function ($0, $1, $2) {
-	                    if ($1) {componet[name][$1] = $2;}
+	                component[queryKey] = {};
+	                component[key[12]].replace(parser, function ($0, $1, $2) {
+	                    if ($1) {component[queryKey][$1] = $2;}
 	                });
 	            }
 	            // hostname 
-	            componet.host && (componet.hostname = componet.host);
+	            component.host && (component.hostname = component.host);
 	            // hostname:port
-	            componet.port && (componet.host = componet.host + ':' + componet.port);
+	            component.port && (component.host = component.host + ':' + component.port);
 	            // http://username:password@hostname:port
-	            if (componet.scheme || componet.host) {
-	                componet.domain = (componet.scheme || 'http') + '://' + (componet.user ? (componet.user + ':' + componet.pass + '@') : '') + componet.host;
+	            if (component.scheme || component.host) {
+	                component.domain = (component.scheme || 'http') + '://' + (component.user ? (component.user + ':' + component.pass + '@') : '') + component.host;
 	            }
-	            componet.file = componet.path.slice(componet.path.lastIndexOf('/') + 1);
-	            // delete componet.source;
-	            return componet;
+	            component.file = component.path.slice(component.path.lastIndexOf('/') + 1);
+	            // delete component.source;
+	            return component;
 	        }, 
 	        unparam: function (url) {
 				if (typeof url === 'object') return url;
@@ -108,24 +110,21 @@
 				}
 				return vars;
 			}, 
-	        addQuery: function(url, query) {
-				
-	            if (!query || isEmptyObject(query)) return url;
-	            var u = urlobj.resolve(url), l = url.indexOf('?'), 
-	                q, 
-	                f = u.fragment ? '#' + u.fragment : '';    
+	        addQuery: function (url, query) {
+				if (!query || $.isEmptyObject(query)) return url;
+	            var 
+	            u = urlobj.resolve(url), 
+	            l = url.indexOf('?'), 
+                q, 
+                f = u.fragment ? '#' + u.fragment : '';
+	            
 	            u.query = urlobj.unparam(u.query);
 	            query = (typeof query === "string") ? urlobj.unparam(query) : query;
 	            q = decodeURIComponent($.param($.extend(true, {}, u.query, query)));
 	            return url.substring(0, (l > -1) ? l : url.length) + '?' + q + f;
-	            function isEmptyObject	(object) {
-	            	var key;
-	            	if (typeof object !== 'object') return false; 
-            		for (key in object) return false;
-            		return true;
-	            }
 	        }, 	        
 		    getAbsoluteUrl: function (u, r) {
+	        	if (u.domain) return u.source;
 		        var s = (u.query ? '?' + u.query : '') + (u.fragment ? '#' + u.fragment : ''),
 		            p1 = u.path,
 		            p2 = r.path,
@@ -182,8 +181,6 @@
 		        if (this.isRelative(u1)) return true;
 		        return u1.domain === u2.domain;
 		    }	
-	    };
-		
+	    };	
 	}
-
 }));
