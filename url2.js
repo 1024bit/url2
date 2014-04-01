@@ -2,7 +2,6 @@
  *  An implementing of Node.js Url at http://www.nodejs.org/api/url.html
  */
 (function(global, factory) {
-    'use strict';
     // Node.js, CommonJS, CommonJS Like
     if (typeof module === 'object' && typeof module.exports === 'object') {
         module.exports = factory(global, true);
@@ -278,7 +277,7 @@
         return target;
     }
 
-    if (noGlobal) {
+    if (!noGlobal) {
         global.url2 = url2;
     }
 
@@ -286,16 +285,8 @@
     if (define && (define.cmd || define.amd)) {
         return define('url2', [], factory);
     }
-    // Global require, may be Node.js
-    if (typeof require === 'function') {
-        return factory(require);
-    }
-    // Non-Module-System
-    return factory(function(id) {
-        for (var key in global)
-            if (key.toLowerCase() === id.toLowerCase())
-                return global[key];
-    });
+    // Common
+    return factory(require);
 
     function factory(require, exports) {
         var url = require('url'), key;
