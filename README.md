@@ -37,10 +37,10 @@ url2.param(myObject);
 // => a%5Bone%5D=1&a%5Btwo%5D=2&a%5Bthree%5D=3&b%5B%5D=1&b%5B%5D=2&b%5B%5D=3
 decodeURIComponent(url2.param(myObject));
 // => a[one]=1&a[two]=2&a[three]=3&b[]=1&b[]=2&b[]=3
-
-// Go [url](http://www.nodejs.org/api/url.html) for details
-url2.parse, url2.format, url2.normalize, url2.resolve
 ```
+
+Go [url](http://www.nodejs.org/api/url.html) for thoes:
+url2.parse, url2.format, url2.normalize, url2.resolve
 
 ## License
 
