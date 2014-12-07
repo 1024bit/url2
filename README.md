@@ -5,7 +5,7 @@ An implementing of Node.js Url, common for Browser and Node.js env.
 
 ## Install
 
-    $ npm install url2
+    $ npm install url-browser
 
 ## Usage
 

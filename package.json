@@ -1,5 +1,5 @@
 {
-  "name": "url2",
+  "name": "url-browser",
   "version": "0.1.0",
   "description": "An implementing of Node.js Url, common for Browser and Node.js env. ",
   "main": "index.js",
