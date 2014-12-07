@@ -190,7 +190,7 @@
 							// If value is a function, invoke it and return its value
 							value = (typeof value === 'function') ? value() : (value == null ? '' : value);
 							s[s.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
-					};,
+					},
 					toStr = Object.prototype.toString,
 					i, v;
 
