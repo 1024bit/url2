@@ -217,7 +217,7 @@ var
       }
 
       // If an array was passed in, assume that it is an array of form elements.
-      if (toStr(a) === '[object Array]') {
+      if (toStr.call(a) === '[object Array]') {
         // Serialize the form elements
         for (i in a) {
           v = a[i];
@@ -238,7 +238,7 @@ var
       function buildParams(prefix, obj, traditional, add) {
         var name, i, v;
         // arr[0][]
-        if (toStr(obj) === '[object Array]') {
+        if (toStr.call(obj) === '[object Array]') {
           // Serialize array item.
           for (i in obj) {
             v = obj[i];
@@ -252,7 +252,7 @@ var
             }
           }
 
-        } else if (!traditional && toStr(obj) === '[object Object]') {
+        } else if (!traditional && toStr.call(obj) === '[object Object]') {
           // Serialize object item.
           for (name in obj) {
             buildParams(prefix + '[' + name + ']', obj[name], traditional, add);
