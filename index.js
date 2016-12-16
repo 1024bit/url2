@@ -24,6 +24,7 @@ var
 
   RE_QUERY = /([^&[=]+)((?:\[[^\[\]]*\])*)(?:=([^&]*))?/g,
   RE_QUERY_SUB_KEY = /\[[^\[\]]*\]/g,
+  RE_20 = /%20/g,
 
   url2 = {
     traditional: false,
@@ -232,7 +233,7 @@ var
       }
 
       // Return the resulting serialization
-      return s.join('&').replace(r20, '+');
+      return s.join('&').replace(RE_20, '+');
 
       function buildParams(prefix, obj, traditional, add) {
         var name, i, v;

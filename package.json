@@ -1,6 +1,6 @@
 {
   "name": "url-browser",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "An implementing of Node.js Url, common for Browser and Node.js env. ",
   "main": "index.js",
   "scripts": {
